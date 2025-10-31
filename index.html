@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestor Express - CRM</title>
+    <meta name="description" content="Sistema de gestão e CRM profissional">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2563eb">
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            background: #f8fafc;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        .loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            color: #2563eb;
+        }
+        
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #e2e8f0;
+            border-top: 4px solid #2563eb;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 16px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        iframe {
+            border: none;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.3s ease-in;
+        }
+        
+        iframe.loaded {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+        <div>Carregando Gestor Express...</div>
+    </div>
+    
+    <iframe 
+        src="https://script.google.com/macros/s/AKfycbwueZ6xpG1DbbjGmZC-otXckXPW7IyQOOSG6EI03DAnW1fzDzFw4nctZmz4Bi1XjcRMLw/exec"
+        id="appFrame"
+        allow="camera; microphone; fullscreen"
+        onload="frameLoaded()">
+    </iframe>
+
+    <script>
+        function frameLoaded() {
+            const loading = document.getElementById('loading');
+            const iframe = document.getElementById('appFrame');
+            
+            setTimeout(() => {
+                loading.style.display = 'none';
+                iframe.classList.add('loaded');
+            }, 1000);
+        }
+        
+        // Service Worker registration for PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then((registration) => {
+                        console.log('SW registered: ', registration);
+                    })
+                    .catch((registrationError) => {
+                        console.log('SW registration failed: ', registrationError);
+                    });
+            });
+        }
+    </script>
+</body>
+</html>
